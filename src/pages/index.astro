@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<BaseLayout title="Laila Kassar" showNav={false}>
+  <section class="home">
+    <Eyebrow tone="ink-faint">Personal · Site · 2026</Eyebrow>
+
+    <h1 class="hero">
+      Laila <em>Kassar</em>
+    </h1>
+
+    <div class="home-nav">
+      <Nav />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .home {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-7);
+    padding-block: var(--space-10);
+    max-width: var(--width-content);
+  }
+
+  .hero {
+    font-family: var(--font-serif);
+    font-size: clamp(3.5rem, 12vw, 8rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: var(--lh-tight);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .hero em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--rose);
+  }
+
+  .home-nav {
+    margin-top: var(--space-4);
+    padding-top: var(--space-5);
+    border-top: var(--border-hairline);
+  }
+</style>

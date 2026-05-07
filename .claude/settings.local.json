@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Read(//Users/lailakassar/**)",
+      "Read(//usr/local/Cellar/**)",
+      "Bash(brew list *)",
+      "Read(//opt/homebrew/**)",
+      "Read(//usr/local/bin/**)",
+      "Bash(brew --version)",
+      "Bash(ls -la ~/.nvm 2>/dev/null; ls -la ~/.volta 2>/dev/null; ls -la ~/.fnm 2>/dev/null; ls /opt/homebrew/opt/ 2>/dev/null | grep -i node; ls /usr/local/opt/ 2>/dev/null | grep -i node; brew list 2>/dev/null | grep -E \"node|nvm|fnm\")",
+      "Bash(/usr/local/opt/node@25/bin/node --version)",
+      "Bash(curl -s http://127.0.0.1:4321/daydragons-personal-website/)"
+    ]
+  }
+}

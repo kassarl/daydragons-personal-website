@@ -1,0 +1,84 @@
+---
+/**
+ * Tag — a small colored pill in the style of the reference card's
+ * `.header-tag` family. DM Mono, uppercase, pill-shaped.
+ *
+ * Usage:
+ *   <Tag tone="rose">Opposite ends</Tag>
+ *   <Tag tone="sage" size="sm">Slow & fast</Tag>
+ *   <Tag tone="mauve" variant="outline">Partition</Tag>
+ */
+
+type Tone = 'rose' | 'sage' | 'mauve' | 'amber' | 'blush' | 'ink';
+
+interface Props {
+  tone?: Tone;
+  /** filled (default) uses `-light` bg + `-mid` border; outline is transparent. */
+  variant?: 'filled' | 'outline';
+  size?: 'sm' | 'md';
+  /** Optional href — renders as <a> instead of <span>. */
+  href?: string;
+  class?: string;
+}
+
+const {
+  tone = 'rose',
+  variant = 'filled',
+  size = 'md',
+  href,
+  class: className,
+} = Astro.props;
+
+const Tag = href ? 'a' : 'span';
+
+// Color resolution: we keep one set of CSS custom properties and let
+// the tone prop point them at the right tokens. Avoids hex hardcoding.
+const tones: Record<Tone, { fg: string; bg: string; border: string }> = {
+  rose:  { fg: 'var(--rose)',  bg: 'var(--rose-light)',  border: 'var(--rose-mid)'  },
+  sage:  { fg: 'var(--sage)',  bg: 'var(--sage-light)',  border: 'var(--sage-mid)'  },
+  mauve: { fg: 'var(--mauve)', bg: 'var(--mauve-light)', border: 'var(--mauve-mid)' },
+  amber: { fg: 'var(--amber)', bg: 'var(--amber-light)', border: 'var(--amber-mid)' },
+  blush: { fg: 'var(--blush)', bg: 'var(--blush-light)', border: 'var(--blush-mid)' },
+  ink:   { fg: 'var(--ink-mid)', bg: 'var(--bg)',        border: 'var(--border-mid)' },
+};
+
+const t = tones[tone];
+const styleVars = [
+  `--tag-fg: ${t.fg}`,
+  `--tag-bg: ${variant === 'outline' ? 'transparent' : t.bg}`,
+  `--tag-border: ${t.border}`,
+].join('; ');
+---
+
+<Tag
+  class:list={['tag', `tag--${size}`, `tag--${variant}`, className]}
+  style={styleVars}
+  href={href}
+>
+  <slot />
+</Tag>
+
+<style>
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    border-radius: var(--radius-pill);
+    color: var(--tag-fg);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    line-height: 1;
+    transition: background var(--duration-fast) var(--ease);
+  }
+
+  .tag--sm { font-size: 0.5625rem; padding: 4px 10px; letter-spacing: 0.18em; }
+  .tag--md { font-size: var(--fs-xs); padding: 5px 14px; }
+
+  /* Anchor variant gets a subtle hover */
+  a.tag:hover {
+    background: var(--tag-fg);
+    color: var(--card);
+  }
+</style>

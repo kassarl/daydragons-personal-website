@@ -1,0 +1,99 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Show the top nav. Default true. The home page hides it. */
+  showNav?: boolean;
+}
+
+const {
+  title = 'Laila Kassar',
+  description = 'Personal website of Laila Kassar.',
+  showNav = true,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="page">
+      {showNav && (
+        <header class="page-header">
+          <a href={`${base}/`} class="wordmark" aria-label="Home">
+            <span class="wordmark-name">Laila <em>Kassar</em></span>
+          </a>
+          <Nav />
+        </header>
+      )}
+
+      <main class="page-main fade-in">
+        <slot />
+      </main>
+
+      <Footer />
+    </div>
+  </body>
+</html>
+
+<style>
+  .page {
+    max-width: var(--width-wide);
+    margin-inline: auto;
+    padding: var(--space-6) var(--space-5) var(--space-8);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+    padding-bottom: var(--space-5);
+    margin-bottom: var(--space-7);
+    border-bottom: var(--border-strong);
+  }
+
+  .wordmark {
+    font-family: var(--font-serif);
+    font-size: var(--fs-md);
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .wordmark-name em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--rose);
+  }
+
+  .page-main {
+    flex: 1;
+  }
+
+  @media (max-width: 640px) {
+    .page-header {
+      align-items: flex-start;
+    }
+  }
+</style>

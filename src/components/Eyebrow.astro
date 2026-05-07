@@ -1,0 +1,69 @@
+---
+/**
+ * Eyebrow — a small DM Mono uppercase label.
+ * Used above titles, on cards, anywhere a typographic "tab" is needed.
+ *
+ * Usage:
+ *   <Eyebrow>Section · 01</Eyebrow>
+ *   <Eyebrow tone="rose">Now playing</Eyebrow>
+ *   <Eyebrow as="h2">Projects</Eyebrow>
+ *   <Eyebrow rule>Recent writing</Eyebrow>   // adds the trailing hairline
+ */
+
+interface Props {
+  /** Color token. Default: `ink-faint`. */
+  tone?: 'ink' | 'ink-soft' | 'ink-faint' | 'rose' | 'sage' | 'mauve' | 'amber' | 'blush';
+  /** Element to render. Default: `span`. */
+  as?: 'span' | 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4';
+  /** Render a hairline rule that fills the remaining row. */
+  rule?: boolean;
+  /** Letter-spacing variant. Default `wider` (3px). */
+  tracking?: 'wide' | 'wider';
+  class?: string;
+}
+
+const {
+  tone = 'ink-faint',
+  as: Tag = 'span',
+  rule = false,
+  tracking = 'wider',
+  class: className,
+} = Astro.props;
+
+const toneVar = `var(--${tone === 'ink' ? 'ink-mid' : tone})`;
+const trackVar = tracking === 'wide' ? 'var(--tracking-wide)' : 'var(--tracking-wider)';
+---
+
+<Tag
+  class:list={['eyebrow-c', { 'has-rule': rule }, className]}
+  style={`--eyebrow-color: ${toneVar}; --eyebrow-tracking: ${trackVar};`}
+>
+  <span class="eyebrow-text"><slot /></span>
+  {rule && <span class="eyebrow-rule" aria-hidden="true"></span>}
+</Tag>
+
+<style>
+  .eyebrow-c {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    letter-spacing: var(--eyebrow-tracking);
+    text-transform: uppercase;
+    color: var(--eyebrow-color);
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .eyebrow-c.has-rule {
+    display: flex;
+    width: 100%;
+  }
+
+  .eyebrow-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+/**
+ * Nav — minimalist text-only top navigation.
+ * DM Mono, uppercase, generous letter-spacing.
+ *
+ * Active state is computed from the current pathname so the same
+ * markup highlights correctly on any page.
+ */
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const links = [
+  { href: '/',            label: 'Home' },
+  { href: '/experience',  label: 'Experience' },
+  { href: '/projects',    label: 'Projects' },
+  { href: '/blog',        label: 'Blog' },
+  { href: '/daydragons',  label: 'Daydragons' },
+  { href: '/contact',     label: 'Contact' },
+];
+
+function isActive(href: string): boolean {
+  const target = (base + href).replace(/\/$/, '') || '/';
+  if (href === '/') return here === base || here === '/' || here === (base || '/');
+  return here === target || here.startsWith(target + '/');
+}
+---
+
+<nav class="nav" aria-label="Primary">
+  <ul class="nav-list">
+    {links.map(({ href, label }) => (
+      <li>
+        <a
+          href={`${base}${href}`}
+          class:list={['nav-link', { 'is-active': isActive(href) }]}
+          aria-current={isActive(href) ? 'page' : undefined}
+        >
+          {label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .nav {
+    width: 100%;
+  }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding-block: var(--space-1);
+    border-bottom: 1px solid transparent;
+    transition: color var(--duration-fast) var(--ease),
+                border-color var(--duration-fast) var(--ease);
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+  }
+
+  .nav-link.is-active {
+    color: var(--ink);
+    border-bottom-color: var(--rose);
+  }
+
+  @media (max-width: 540px) {
+    .nav-list {
+      gap: var(--space-3) var(--space-4);
+    }
+  }
+</style>

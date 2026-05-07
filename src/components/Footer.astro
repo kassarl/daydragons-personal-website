@@ -1,0 +1,40 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <p class="colophon">
+    <span>© {year} Laila Kassar</span>
+    <span aria-hidden="true">·</span>
+    <span>Set in <em>Cormorant Garamond</em>, Jost &amp; DM Mono</span>
+  </p>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--space-12);
+    padding-block: var(--space-6);
+    border-top: var(--border-hairline);
+  }
+
+  .colophon {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  .colophon em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-soft);
+    font-size: var(--fs-sm);
+  }
+</style>

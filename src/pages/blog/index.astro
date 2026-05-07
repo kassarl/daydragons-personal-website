@@ -1,0 +1,162 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import Tag from '../../components/Tag.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const posts = (await getCollection('blog', ({ data }) =>
+  import.meta.env.PROD ? data.draft !== true : true,
+)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout title="Blog — Laila Kassar" description="Notes, essays, and writing.">
+  <section class="blog">
+    <header class="blog-header">
+      <Eyebrow tone="ink-faint">The · Blog</Eyebrow>
+      <h1 class="blog-title">Notes &amp; <em>writing</em></h1>
+    </header>
+
+    {posts.length === 0 ? (
+      <p class="empty"><em>No posts yet.</em></p>
+    ) : (
+      <ul class="post-list">
+        {posts.map((post) => (
+          <li class="post-row">
+            <a href={`${base}/blog/${post.id}`} class="post-link">
+              <span class="post-date">{fmt(post.data.date)}</span>
+              <span class="post-meta">
+                <span class="post-title">{post.data.title}</span>
+                <span class="post-desc"><em>{post.data.description}</em></span>
+                {post.data.tags.length > 0 && (
+                  <span class="post-tags">
+                    {post.data.tags.map((t) => (
+                      <Tag tone="ink" size="sm">{t}</Tag>
+                    ))}
+                  </span>
+                )}
+                {post.data.draft && (
+                  <span class="post-tags">
+                    <Tag tone="amber" size="sm">draft</Tag>
+                  </span>
+                )}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .blog {
+    max-width: var(--width-content);
+    margin-inline: auto;
+  }
+
+  .blog-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+  }
+
+  .blog-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 7vw, 4rem);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--lh-tight);
+    color: var(--ink);
+  }
+
+  .blog-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--rose);
+  }
+
+  .empty {
+    font-family: var(--font-serif);
+    font-size: var(--fs-md);
+    color: var(--ink-soft);
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: var(--border-hairline);
+  }
+
+  .post-row {
+    border-bottom: var(--border-hairline);
+  }
+
+  .post-link {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: var(--space-5);
+    padding: var(--space-5) 0;
+    align-items: baseline;
+    color: var(--ink);
+  }
+
+  .post-link:hover .post-title {
+    color: var(--rose);
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 0.4em;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .post-title {
+    font-family: var(--font-serif);
+    font-size: 1.625rem;
+    font-weight: 500;
+    line-height: var(--lh-snug);
+    transition: color var(--duration-fast) var(--ease);
+  }
+
+  .post-desc {
+    font-family: var(--font-serif);
+    font-size: var(--fs-md);
+    color: var(--ink-soft);
+    line-height: var(--lh-normal);
+  }
+
+  .post-desc em {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+  }
+
+  @media (max-width: 640px) {
+    .post-link {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+</style>
